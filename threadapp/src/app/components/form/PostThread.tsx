@@ -11,7 +11,7 @@ export default function PostThread({ userId }: ID) {
     const pathname = usePathname();
     const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: yupResolver(threadSchema) })
     const onsubmit = async (data: any) => {
-        console.log(data.thread);
+        console.log(userId + "us");
         await createThread({
             content: data.thread,
             author: userId,

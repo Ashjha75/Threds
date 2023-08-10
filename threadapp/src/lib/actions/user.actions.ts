@@ -7,10 +7,10 @@ interface Params {
     userId: string, username: string, name: string, bio: string, image: string, path: string;
 }
 export async function updateUser({ userId, username, name, bio, image, path }: Params): Promise<void> {
-
+    console.log(JOSN.stringify(userId));
     connectDB()
     try {
-        await User.findOneAndUpdate({ id: userId }, {
+        await User.findByIdAndUpdate({ id: userId }, {
             username: username.toLowerCase(),
             name, bio, image, onboarder: true
         }, { upsert: true })
