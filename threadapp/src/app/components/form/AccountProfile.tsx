@@ -22,7 +22,8 @@ import { usePathname, useRouter } from "next/navigation";
 //     }
 //     btnTitle: string
 // }
-export default function AccountProfile(userId: string) {
+export default function AccountProfile({ userId }: any) {
+  console.log(userId + "insak");
   const router = useRouter();
   const pathname = usePathname();
   const [imgsrc, setImgsrc] = useState("/assets/logo.svg");
@@ -51,7 +52,6 @@ export default function AccountProfile(userId: string) {
       username: data.username,
       name: data.name,
       path: pathname,
-      image: data.profilePhoto,
       bio: data.bio,
       userId: userId,
     });
@@ -126,8 +126,8 @@ export default function AccountProfile(userId: string) {
             Bio
             <textarea
               className="account-form_input no-focus"
-              rows="12"
-              cols="65"
+              rows={12}
+              cols={65}
               {...register("bio")}
             ></textarea>
           </label>

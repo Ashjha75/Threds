@@ -1,19 +1,27 @@
 "use server"
-
 import { revalidatePath } from "next/cache";
 import User from "../models/user.model"
+import { ObjectId } from 'bson';
 import { connectDB } from "../mongoose"
 interface Params {
-    userId: string, username: string, name: string, bio: string, image: string, path: string;
+    userId: string, username: string, name: string, bio: string, path: string;
 }
-export async function updateUser({ userId, username, name, bio, image, path }: Params): Promise<void> {
-    console.log(JOSN.stringify(userId));
+export async function updateUser({ userId, username, name, bio, path }: Params) {
+    console.log("nsnansn-----------------------------------------");
+    console.log(userId + " " + username + " " + name + " " + bio + " " + " " + path + " ");
     connectDB()
     try {
-        await User.findByIdAndUpdate({ id: userId }, {
+        console.log("nsnansn-----------------------------------------");
+        console.log(await User.find({ _id: userId }));
+
+        await User.findByIdAndUpdate({ _id: userId }, {
             username: username.toLowerCase(),
-            name, bio, image, onboarder: true
+            name, bio, onboarder: true
         }, { upsert: true })
+        console.log("nsnansn-----------------------------------------" + await User.findByIdAndUpdate({ _id: userId }, {
+            username: username.toLowerCase(),
+            name, bio, onboarded: true
+        }, { upsert: true }))
         if (path === '/profile/edit') {
             revalidatePath(path)
         }
