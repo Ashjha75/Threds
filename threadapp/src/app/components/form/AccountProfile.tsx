@@ -3,30 +3,29 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { isBase64Image } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
 import { updateUser } from "@/lib/actions/user.actions";
 import { usePathname, useRouter } from "next/navigation";
+import { NextRequest } from "next/server";
+import { decodeToken } from "@/lib/helpers/tokenData";
 
-// Define a variable with ObjectId type
+export default function AccountProfile(request: NextRequest) {
+  const [userId, setUserId] = useState("");
+  useEffect(() => {
+    decodeToken(request)
+      .then((decodedUserId) => {
+        setUserId(decodedUserId);
+      })
+      .catch((error: any) => {
+        console.error("Error decoding token:", error);
+      });
+  }, []);
 
-// interface Props {
-//     user: {
-//         id: string,
-//         objectId: string,
-//         username: string,
-//         name: string,
-//         bio: string,
-//         image: string
-//     }
-//     btnTitle: string
-// }
-export default function AccountProfile({ userId }: any) {
-  console.log(userId + "insak");
   const router = useRouter();
   const pathname = usePathname();
-  const [imgsrc, setImgsrc] = useState("/assets/logo.svg");
+  const [imgsrc, setImgsrc] = useState(["/assets/logo.svg"]);
   const { startUpload } = useUploadThing("media");
   const schema = yup.object().shape({
     name: yup.string().required("Name is required *"),
@@ -40,25 +39,43 @@ export default function AccountProfile({ userId }: any) {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
   const onsubmit = async (data: any) => {
-    const profilePhoto = data.profileImg;
-    const hasImageChanged = isBase64Image(profilePhoto);
+    const blob = data.profileImg;
+
+    const hasImageChanged = isBase64Image(blob);
     if (hasImageChanged) {
-      const imgRes = await startUpload(profilePhoto);
+      const imgRes = await startUpload(imgsrc);
+
       if (imgRes && imgRes[0].fileUrl) {
         data.profileImg = imgRes[0].fileUrl;
       }
     }
+
+    console.log(data.profileImg);
     await updateUser({
       username: data.username,
       name: data.name,
       path: pathname,
+      image: blob,
       bio: data.bio,
       userId: userId,
     });
     router.push("/");
   };
+  // const handleChange = (e: any) => {
+  //   setImgsrc(URL.createObjectURL(e.target.files[0]));
+  //   console.log(URL.createObjectURL(e.target.files[0]));
+  // };
   const handleChange = (e: any) => {
-    setImgsrc(URL.createObjectURL(e.target.files[0]));
+    const selectedFile = e.target.files[0];
+
+    if (selectedFile) {
+      // Create an object URL for the selected file
+      const newImgsrc = [...imgsrc]; // Create a copy of the array
+      newImgsrc[0] = URL.createObjectURL(selectedFile); // Update the URL for the first element
+      setImgsrc(newImgsrc); // Update the state with the new array
+
+      console.log(newImgsrc[0]); // Log the new URL
+    }
   };
   return (
     <>
@@ -66,7 +83,7 @@ export default function AccountProfile({ userId }: any) {
         <div className="flex mb-5 items-center justify-center  text-light-1">
           <label className="flex border-4 rounded-full">
             <Image
-              src={imgsrc}
+              src={imgsrc[0]}
               alt="profile_icon"
               width={96}
               height={96}

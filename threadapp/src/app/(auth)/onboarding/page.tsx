@@ -9,10 +9,7 @@ import { cookies } from "next/headers";
 export default async function page(request: NextRequest) {
   const cookieStore = cookies();
   const cook = cookieStore.get("token")?.value.toString();
-  console.log(
-    cook,
-    +"new_______________________________))))))))))))))))))))))))))))"
-  );
+
   const userId = jwt.verify(cook, process.env.SECRET_KEY!);
   const userInfo = await User.findOne({ userId });
   // const userData = {
@@ -32,7 +29,7 @@ export default async function page(request: NextRequest) {
         Complete your profile now to use Threads
       </p>
       <section className="mt-9 bg-dark-2 p-10">
-        <AccountProfile userId={userData} />
+        <AccountProfile />
       </section>
     </main>
   );
