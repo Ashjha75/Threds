@@ -17,7 +17,6 @@ export default function login() {
       router.push("/onboarding");
     } catch (error: any) {
       toast.error(error.response.data.message);
-    } finally {
     }
   };
   return (
