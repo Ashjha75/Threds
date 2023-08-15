@@ -15,7 +15,6 @@ export default function signup() {
     try {
       e.preventDefault();
       const response = await axios.post("/api/signup", user);
-      console.log(response);
       toast.success(response.data.message);
       router.push("/sign-in");
     } catch (error: any) {

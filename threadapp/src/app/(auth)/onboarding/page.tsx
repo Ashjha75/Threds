@@ -7,21 +7,6 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
 export default async function page(request: NextRequest) {
-  const cookieStore = cookies();
-  const cook = cookieStore.get("token")?.value.toString();
-
-  const userId = jwt.verify(cook, process.env.SECRET_KEY!);
-  const userInfo = await User.findOne({ userId });
-  // const userData = {
-  //   objectId: userInfo?._id,
-  //   username: userInfo?.username,
-  //   name: userInfo?.name,
-  //   bio: userInfo?.bio,
-  //   image: userInfo?.image,
-  // };
-  const userData = userInfo?._id.toString();
-
-  console.log(userData + typeof userData + "bvsjjsjbsakjk");
   return (
     <main className="mx-auto flex max-w-3xl flex-col justify-start px-10 py-20">
       <h1 className="head-text">Onboarding</h1>

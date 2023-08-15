@@ -24,29 +24,28 @@ interface Props {
     isComment: boolean;
   };
 }
-// export default function ThreadCard({
-//   id,
-//   currentUserId,
-//   parentId,
-//   content,
-//   author,
-//   community,
-//   createdAt,
-//   contents,
-//   iscomment,
-// }: Props)
-export default function ThreadCard() {
+
+export default function ThreadCard({
+  id,
+  currentUserId,
+  parentId,
+  content,
+  author,
+  community,
+  createdAt,
+  contents,
+  isComment,
+}: Props) {
   return (
     <article className="flex w-full flex-col rounded-xl bg-dark-2 p-7">
       {/* <h2 className="text-small-regular text-light-2">{content}</h2> */}
       <div className="flex items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center">
-            {/* author.id */}
-            <Link href={`/profile/${"s"}`} className="relative h-11 w-11">
-              {/* author.image */}
+            <Link href={`/profile/${author.id}`} className="relative h-11 w-11">
+              {/*  */}
               {/* <Image
-                src={"/public/assets/user-2.png"}
+                src={author.image}
                 alt="profile image"
                 fill
                 className="cursor-pointer rounded-full"
@@ -62,17 +61,10 @@ export default function ThreadCard() {
           <div className="flex w-full flex-col">
             <Link href={`/profile/${"s"}`} className="w-fit">
               <h4 className="cursor-pointer text-base-semibold text-light-1">
-                {/* {{author.name}} */}
-                include
+                {author.name}
               </h4>
             </Link>
-            <p className="mt-2 text-small-regular text-light-2">
-              {" "}
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio amet
-              aliquid nobis voluptates voluptate? Unde ducimus laboriosam
-              impedit dolorum dolores ratione quas nostrum quos omnis,
-              recusandae deleniti non! Ab, totam?
-            </p>
+            <p className="mt-2 text-small-regular text-light-2">{content}</p>
             <div className="mt-5 flex flex-col gap-3">
               <div className="flex gap-3.5">
                 <Image
@@ -82,8 +74,7 @@ export default function ThreadCard() {
                   height={24}
                   className="cursor-pointer object-contain"
                 />
-                {/* `thread/${id}` */}
-                <Link href={`thread/${1}`}>
+                <Link href={`thread/${id}`}>
                   <Image
                     src="/assets/reply.svg"
                     alt="reply"
@@ -107,16 +98,13 @@ export default function ThreadCard() {
                   className="cursor-pointer object-contain"
                 />
               </div>
-              {/* {
-                iscomment && contents.length>0 &&  (
-                  <Link href={`/thread/${id}`}>
-                    <p className="mt-1 text-subtle-medium text-gray-1">
-{contents.length} replies
-
-                    </p>
-                  </Link>
-                )
-              } */}
+              {/* {isComment && contents.length > 0 && (
+                <Link href={`/thread/${id}`}>
+                  <p className="mt-1 text-subtle-medium text-gray-1">
+                    {contents.length} replies
+                  </p>
+                </Link>
+              )} */}
             </div>
           </div>
         </div>
