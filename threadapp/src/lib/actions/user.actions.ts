@@ -7,7 +7,6 @@ interface Params {
     userId: string, username: string, name: string, image: string, bio: string, path: string;
 }
 export async function updateUser({ userId, username, name, image, bio, path }: Params) {
-    console.log(userId + " " + username + " " + name + " " + bio + " " + " " + path + " " + image);
     connectDB()
     try {
         await User.findByIdAndUpdate({ _id: userId }, {

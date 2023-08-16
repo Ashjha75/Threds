@@ -6,6 +6,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 // chatGpt
 export function isBase64Image(imageData: string) {
-  const base64Pattern = /^data:image\/(jpeg|png|gif|bmp);base64,/;
-  return base64Pattern.test(imageData);
+  const base64Regex = /^data:image\/(png|jpe?g|gif|webp);base64,/;
+  return base64Regex.test(imageData);
 }
