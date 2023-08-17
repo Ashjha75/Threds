@@ -1,27 +1,41 @@
+"use client";
 import ThreadCard from "@/app/components/cards/ThreadCard";
-import Comment from "@/app/components/form/comment";
-import { fetchThreadById } from "@/lib/actions/thread.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-const page = async ({ params }: { params: { id: string } }) => {
-  if (!params.id) return null;
-  const user = await currentUser();
-  if (!user) return null;
-  const thread = await fetchThreadById(user.id);
-  const userInfo = await fetchUser(user?.id);
-  if (userInfo?.onboarded) redirect("/onboarding");
+import { decodeToken } from "@/lib/helpers/tokenData";
+import { NextRequest } from "next/server";
+import { useEffect, useState } from "react";
+import { useGlobalContext } from "@/Context/store";
+const page = ({ params }: { params: { id: string } }, request: NextRequest) => {
+  // if (!params.id) return null;
+  // const [userIds, setUserIds] = useState("");
+  // useEffect(() => {
+  //   decodeToken(request)
+  //     .then((decodedUserId: any) => {
+  //       setUserIds(decodedUserId);
+  //     })
+  //     .catch((error: any) => {
+  //       console.error("Error decoding token:", error);
+  //     });
+  // }, []);
+  // if (!userIds) return null;
+  const { userId, setUserId, data, setData } = useGlobalContext();
+
   return (
-    <section className="relative">
-      <div>
-        <ThreadCard />
-      </div>
-      <div className="mt-7">
-        <Comment
-          threadId={thread.id}
-          currentUserImg={user.imageUrl}
-          currentUserId={JSON.stringify(userInfo._id)}
-        />
+    <section>
+      <div className="text-white">
+        {/* <ThreadCard
+          key={thread._id}
+          id={thread._id}
+          currentUserId={"64ddb6dfa72514aea656f27c"}
+          parentId={thread.parentId}
+          content={thread.content}
+          author={thread.author}
+          community={thread.community}
+          createdAt={thread.createdAt}
+          contents={thread.children}
+        /> */}
+        {/* {params.id} */}
+        {userId}
       </div>
     </section>
   );

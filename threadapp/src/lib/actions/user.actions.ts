@@ -26,7 +26,8 @@ export async function updateUser({ userId, username, name, image, bio, path }: P
 export async function fetchUser(userId: string) {
     try {
         connectDB();
-        return await User.findOne({ id: userId })
+        console.log(userId)
+        return await User.findById({ userId })
         // .populate({path:'communities',model:'Community'})
     } catch (error: any) {
         throw new Error(`Failed to fetch the user :${error.message}`)
