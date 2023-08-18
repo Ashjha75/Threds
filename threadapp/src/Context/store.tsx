@@ -1,10 +1,4 @@
 "use client";
-
-import { fetchUser } from "@/lib/actions/user.actions";
-import { fetchUsersData } from "@/lib/helpers/UserData";
-import { decodeToken, fetchData } from "@/lib/helpers/tokenData";
-import User from "@/lib/models/user.model";
-import { NextRequest } from "next/server";
 import {
   createContext,
   useContext,
@@ -13,22 +7,36 @@ import {
   useState,
   useEffect,
 } from "react";
+import { NextRequest } from "next/server";
+import { fetchData } from "@/lib/helpers/tokenData";
 
 type DataType = {
-  firstName: string;
+  _id: string;
+  id: string;
+  username: string;
+  email: string;
+  name: string;
+  onboarded: boolean;
 };
 
 interface ContextProps {
   userId: string;
   setUserId: Dispatch<SetStateAction<string>>;
-  data: DataType[];
-  setData: Dispatch<SetStateAction<DataType[]>>;
+  data: DataType; // Change to DataType, not DataType[]
+  setData: Dispatch<SetStateAction<DataType>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
   userId: "",
-  setUserId: (): string => "",
-  data: {},
+  setUserId: () => {},
+  data: {
+    _id: "",
+    id: "",
+    username: "",
+    email: "",
+    name: "",
+    onboarded: false,
+  },
   setData: () => {},
 });
 
@@ -36,30 +44,35 @@ export const GlobalContextProvider = (
   { children }: any,
   request: NextRequest
 ) => {
-  //   const [userId, setUserId] = useState("");
-  const [data, setData] = useState({});
-  const [userId, setUserId] = useState("");
+  const [data, setData] = useState<DataType>({
+    // Specify the DataType type
+    _id: "",
+    id: "",
+    username: "",
+    email: "",
+    name: "",
+    onboarded: false,
+  });
+
   useEffect(() => {
     fetchData(request)
-      .then((decodedUserId: any) => {
-        setUserId(decodedUserId);
+      .then((decodedData: any) => {
+        setData({
+          _id: decodedData._id,
+          id: decodedData.id,
+          username: decodedData.username,
+          email: decodedData.email,
+          name: decodedData.name,
+          onboarded: decodedData.onboarded,
+        });
       })
       .catch((error: any) => {
         console.error("Error decoding token:", error);
       });
   }, []);
-  //   setData(User.findById({ id: userId }));
-  //   console.log(User.findById({ id: userId }));
-  //   useEffect(() => {
-  //     fetchUsersData(userId)
-  //       .then((user: any) => setData(user))
-  //       .catch((error: any) => {
-  //         console.error("Error decoding token:", error);
-  //       });
-  //   });
-  //   console.log(fetchUser(userId));
+  console.log(data.onboarded);
   return (
-    <GlobalContext.Provider value={{ userId, setUserId, data, setData }}>
+    <GlobalContext.Provider value={{ data, setData }}>
       {children}
     </GlobalContext.Provider>
   );
