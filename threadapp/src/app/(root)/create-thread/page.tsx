@@ -1,8 +1,6 @@
 "use client";
 import PostThread from "@/app/components/form/PostThread";
-import { fetchUser } from "@/lib/actions/user.actions";
 import { decodeToken } from "@/lib/helpers/tokenData";
-import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 import { useEffect, useState } from "react";
 
@@ -10,7 +8,7 @@ export default function Page(request: NextRequest) {
   const [userId, setUserId] = useState("");
   useEffect(() => {
     decodeToken(request)
-      .then((decodedUserId) => {
+      .then((decodedUserId: any) => {
         setUserId(decodedUserId);
       })
       .catch((error: any) => {

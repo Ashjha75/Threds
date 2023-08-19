@@ -1,13 +1,10 @@
 "use client";
-import { useGlobalContext } from "@/Context/store";
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { useState } from "react";
 export default function login() {
   const router = useRouter();
-  const { data, setData } = useGlobalContext();
-
   const [user, setUser] = useState({
     password: "",
     email: "",
@@ -17,11 +14,7 @@ export default function login() {
       e.preventDefault();
       const response = await axios.post("/api/signin", user);
       toast.success(response.data.message);
-      if (data.onboarded) {
-        router.push("/");
-      } else {
-        router.push("/onboarding");
-      }
+      router.push("/onboarding");
     } catch (error: any) {
       toast.error(error.response.data.message);
     }

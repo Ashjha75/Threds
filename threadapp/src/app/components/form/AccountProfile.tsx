@@ -10,9 +10,16 @@ import { updateUser } from "@/lib/actions/user.actions";
 import { usePathname, useRouter } from "next/navigation";
 import { NextRequest } from "next/server";
 import { decodeToken } from "@/lib/helpers/tokenData";
+import { useGlobalContext } from "@/Context/store";
 
 export default function AccountProfile(request: NextRequest) {
+  const router = useRouter();
   const [userId, setUserId] = useState("");
+  const { data, setData } = useGlobalContext();
+  console.log(data);
+  if (data.onboarded) {
+    router.push("/");
+  }
   useEffect(() => {
     decodeToken(request)
       .then((decodedUserId) => {
@@ -23,7 +30,6 @@ export default function AccountProfile(request: NextRequest) {
       });
   }, []);
 
-  const router = useRouter();
   const pathname = usePathname();
   const [imgsrc, setImgsrc] = useState(["/assets/logo.svg"]);
   const { startUpload } = useUploadThing("media");

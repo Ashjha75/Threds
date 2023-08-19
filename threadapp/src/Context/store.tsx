@@ -20,8 +20,6 @@ type DataType = {
 };
 
 interface ContextProps {
-  userId: string;
-  setUserId: Dispatch<SetStateAction<string>>;
   data: DataType; // Change to DataType, not DataType[]
   setData: Dispatch<SetStateAction<DataType>>;
 }
@@ -70,7 +68,7 @@ export const GlobalContextProvider = (
         console.error("Error decoding token:", error);
       });
   }, []);
-  console.log(data.onboarded);
+  console.log(data);
   return (
     <GlobalContext.Provider value={{ data, setData }}>
       {children}

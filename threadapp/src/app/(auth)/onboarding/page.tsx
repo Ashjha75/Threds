@@ -1,10 +1,5 @@
 import AccountProfile from "@/app/components/form/AccountProfile";
-import { fetchUser } from "@/lib/actions/user.actions";
 import { NextRequest } from "next/server";
-import { decodeToken } from "@/lib/helpers/tokenData";
-import User from "@/lib/models/user.model";
-import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
 
 export default async function page(request: NextRequest) {
   return (
