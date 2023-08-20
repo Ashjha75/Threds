@@ -109,3 +109,31 @@ export async function addCommentToThread(threadId: string, commentText: string, 
 
     }
 }
+export async function addLikeUnlike(id: string, action: string, path: any) {
+    connectDB()
+    try {
+        const originalThread = await Thread.findById(id);
+        if (!originalThread) {
+            throw new Error("Thread not found")
+        }
+        originalThread.likeCount = +(originalThread.likeCount + 1);
+        if (action == "LIKE") {
+            return false;
+        }
+        if (action == "UNLIKE") {
+            return true;
+        }
+        // if (action == "LIKE") {
+        //     originalThread.likeCount += 1
+        // } if (action == "UNLIKE") {
+        //     originalThread.likeCount -= 1
+        // }
+        // else {
+        //     throw new Error("Invalid Actions")
+        // }
+        revalidatePath(path)
+    } catch (error: any) {
+        throw new Error(`Error fetching thread:${error.message}`)
+
+    }
+}

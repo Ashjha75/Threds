@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
     },
     image: String,
     bio: String,
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
     threads: [{
         type: mongoose.Schema.Types.ObjectId,
         default: null,
