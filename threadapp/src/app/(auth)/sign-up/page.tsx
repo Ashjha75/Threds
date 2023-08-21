@@ -22,10 +22,7 @@ export default function signup() {
     } finally {
     }
   };
-  const handleChange = (e: any) => {
-    const { names, value } = e.target;
-    setUser({ ...user, [names]: value });
-  };
+
   return (
     <main>
       <Toaster position="top-center" reverseOrder={false} />

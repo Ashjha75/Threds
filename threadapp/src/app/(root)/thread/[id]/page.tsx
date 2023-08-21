@@ -1,29 +1,19 @@
-"use client";
 import ThreadCard from "@/app/components/cards/ThreadCard";
-import { fetchUser } from "@/lib/actions/user.actions";
-import { decodeToken } from "@/lib/helpers/tokenData";
 import { NextRequest } from "next/server";
-import { useEffect, useState } from "react";
-import { useGlobalContext } from "@/Context/store";
-const page = ({ params }: { params: { id: string } }, request: NextRequest) => {
-  // if (!params.id) return null;
-  // const [userIds, setUserIds] = useState("");
-  // useEffect(() => {
-  //   decodeToken(request)
-  //     .then((decodedUserId: any) => {
-  //       setUserIds(decodedUserId);
-  //     })
-  //     .catch((error: any) => {
-  //       console.error("Error decoding token:", error);
-  //     });
-  // }, []);
-  // if (!userIds) return null;
-  const { userId, setUserId, data, setData } = useGlobalContext();
 
+import { useGlobalContext } from "@/Context/store";
+import { fetchThreadById } from "@/lib/actions/thread.actions";
+import Comment from "@/app/components/form/comment";
+const page = async (
+  { params }: { params: { id: string } },
+  request: NextRequest
+) => {
+  const thread = await fetchThreadById(params.id);
+  console.log(thread.Threads);
   return (
     <section>
       <div className="text-white">
-        {/* <ThreadCard
+        <ThreadCard
           key={thread._id}
           id={thread._id}
           currentUserId={"64ddb6dfa72514aea656f27c"}
@@ -33,9 +23,37 @@ const page = ({ params }: { params: { id: string } }, request: NextRequest) => {
           community={thread.community}
           createdAt={thread.createdAt}
           contents={thread.children}
-        /> */}
-        {/* {params.id} */}
-        {userId}
+          commentCount={thread.childrenCount}
+          likeCount={thread.likeCount}
+          isComment={false}
+        />
+        <div className="mt-10 -mb-7 text-gray-400">
+          Replying to{" "}
+          <span className="text-[#1c80c3] hover:underline cursor-pointer">
+            @{thread.author.name}
+          </span>
+        </div>
+        <div>
+          <Comment threadsId={thread.id} />
+        </div>
+        <div className="mt-10">
+          {thread.children.map((childrenItem: any) => (
+            <ThreadCard
+              key={childrenItem._id}
+              id={childrenItem._id}
+              currentUserId={"64ddb6dfa72514aea656f27c"}
+              parentId={childrenItem.parentId}
+              content={childrenItem.content}
+              author={childrenItem.author}
+              community={childrenItem.community}
+              createdAt={childrenItem.createdAt}
+              contents={childrenItem.children}
+              commentCount={childrenItem.childrenCount}
+              likeCount={childrenItem.likeCount}
+              isComment={true}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

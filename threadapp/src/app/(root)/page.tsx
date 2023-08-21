@@ -22,6 +22,9 @@ export default async function Home() {
                 community={post.community}
                 createdAt={post.createdAt}
                 contents={post.children}
+                commentCount={post.childrenCount}
+                likeCount={post.likeCount}
+                isComment={false}
               />
             ))}
           </>
