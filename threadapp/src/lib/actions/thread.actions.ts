@@ -137,3 +137,13 @@ export async function addLikeUnlike(id: string, action: string, path: any) {
 
     }
 }
+export async function fetchUserAllPost(id: string) {
+    connectDB();
+    try {
+        const thread = await User.findById({ username: id });
+        return thread;
+    } catch (error: any) {
+        throw new Error(`Error fetching thread:${error.message}`)
+
+    }
+}
