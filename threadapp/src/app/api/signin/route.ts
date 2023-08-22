@@ -58,6 +58,7 @@ export async function POST(request: NextRequest, resonse: NextApiResponse) {
             value: token,
             httpOnly: true,
             path: '/',
+            expires: new Date(Date.now() + 3600000)
         })
         return res;
 

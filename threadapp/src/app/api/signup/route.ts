@@ -9,12 +9,12 @@ export async function POST(request: NextRequest) {
     try {
         const reqBody = await request.json();
         const { username, email, password } = reqBody;
-
         if (!username || !email || !password) {
             return NextResponse.json({ error: 'Please fill all required fields' }, { status: 400 });
         }
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
+        const existingUserEmail = await User.findOne({ email });
+        const existingUserName = await User.findOne({ username });
+        if (existingUserEmail || existingUserName) {
             return NextResponse.json({ error: 'User already exists' }, { status: 400 });
         }
 

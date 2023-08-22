@@ -1,5 +1,7 @@
+import { addLikeUnlike } from "@/lib/actions/thread.actions";
 import Image from "next/image";
 import Link from "next/link";
+import LikeButton from "../shared/LikeButton";
 
 interface Props {
   id: string;
@@ -21,8 +23,10 @@ interface Props {
     author: {
       image: string;
     }[];
-    isComment: boolean;
   };
+  commentCount: string;
+  likeCount: string;
+  isComment: boolean;
 }
 
 export default function ThreadCard({
@@ -34,15 +38,24 @@ export default function ThreadCard({
   community,
   createdAt,
   contents,
+  commentCount,
+  likeCount,
   isComment,
 }: Props) {
   return (
-    <article className="flex w-full flex-col rounded-xl bg-dark-2 p-7">
+    <article
+      className={`flex w-full flex-col rounded-xl  ${
+        isComment ? "px-0 xs:px-7 mt-5" : "bg-dark-2 p-7"
+      }`}
+    >
       {/* <h2 className="text-small-regular text-light-2">{content}</h2> */}
       <div className="flex items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center">
-            <Link href={`/profile/${author.id}`} className="relative h-11 w-11">
+            <Link
+              href={`/profile/${author.username}`}
+              className="relative h-11 w-11"
+            >
               {/*  */}
               {/* <Image
                 src={author.image}
@@ -64,24 +77,29 @@ export default function ThreadCard({
                 {author.name}
               </h4>
             </Link>
-            <p className="mt-2 text-small-regular text-light-2">{content}</p>
+            <Link href={`/thread/${id}`}>
+              {" "}
+              <p className="mt-2 text-small-regular text-light-2">{content}</p>
+            </Link>
             <div className="mt-5 flex flex-col gap-3">
               <div className="flex gap-3.5">
-                <Image
-                  src="/assets/heart-gray.svg"
-                  alt="heart"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                />
-                <Link href={`thread/${id}`}>
-                  <Image
-                    src="/assets/reply.svg"
-                    alt="reply"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                  />
+                <span className="flex w-fit justify-around">
+                  <LikeButton id={id} />
+                  <span className="text-gray-400 ">{likeCount}</span>
+                </span>
+                <Link href={`/thread/${id}`}>
+                  <span className="flex w-fit justify-around">
+                    <Image
+                      src="/assets/reply.svg"
+                      alt="reply"
+                      width={24}
+                      height={24}
+                      className="cursor-pointer object-contain"
+                    />
+                    <span className="text-gray-400 ">
+                      {commentCount != "0" ? commentCount : null}
+                    </span>
+                  </span>
                 </Link>
                 <Image
                   src="/assets/repost.svg"
