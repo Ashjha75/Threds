@@ -5,7 +5,6 @@ import Image from "next/image";
 import { SlCalender } from "react-icons/sl";
 const page = async ({ params }: { params: { id: string } }) => {
   const userData = await fetchUsersData(params.id);
-
   return (
     <section className="text-light-1">
       <div className="relative ">
@@ -19,7 +18,7 @@ const page = async ({ params }: { params: { id: string } }) => {
         <div className="flex-1">
           <Image
             src="/assets/user-2.png"
-            alt={userData.name}
+            alt={"userData.name"}
             width={120}
             height={120}
             className="rounded-full shadow-md cursor-pointer absolute top-[15rem]  border-4 border-black"
@@ -32,7 +31,7 @@ const page = async ({ params }: { params: { id: string } }) => {
         </div>
       </div>
       <article className="ml-8">
-        <strong>{userData.name}</strong>
+        <strong>{userData.username}</strong>
         <div className="text-primary-500 ">@{userData.username}</div>
         <div className="mt-5">{userData.bio}</div>
         <div className="text-gray-400 flex gap-x-4 items-center text-small-regular">
@@ -41,7 +40,7 @@ const page = async ({ params }: { params: { id: string } }) => {
         </div>
       </article>
 
-      <ProfileTab userData={userData} />
+      <ProfileTab userData={userData.username} />
     </section>
   );
 };

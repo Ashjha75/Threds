@@ -14,7 +14,7 @@ export default function login() {
       e.preventDefault();
       const response = await axios.post("/api/signin", user);
       toast.success(response.data.message);
-      router.push("/onboarding");
+      router.push("/");
     } catch (error: any) {
       toast.error(error.response.data.message);
     }

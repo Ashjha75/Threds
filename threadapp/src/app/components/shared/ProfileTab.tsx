@@ -5,16 +5,17 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Posts from "./threads";
+import { fetchUsersData } from "@/lib/helpers/UserData";
 const ProfileTab = (
   { userData }: any,
   { params }: { params: { id: string } }
 ) => {
-  const router = useRouter();
   const [selectedTab, setSelectedTab] = useState("replies");
+  const router = useRouter();
 
   useEffect(() => {
     router.push(
-      `/profile/${user}?tab=${selectedTab.toLowerCase()}`,
+      `/profile/${userData}?tab=${selectedTab.toLowerCase()}`,
       undefined,
       {
         shallow: true,
@@ -25,7 +26,6 @@ const ProfileTab = (
   const dynamicComponent = dynamic(() => import(`./${selectedTab}`), {
     ssr: false,
   });
-
   return (
     <>
       <section className="w-full flex justify-evenly items-center mt-10">
@@ -59,7 +59,7 @@ const ProfileTab = (
       </section>
       <hr className="border bg-transparent border-t-0 border-gray-400 mt-1" />
       <section className="bg-[#333]">
-        <Posts userData={userData} />
+        <Posts />
       </section>
     </>
   );

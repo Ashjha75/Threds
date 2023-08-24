@@ -16,6 +16,7 @@ export default function AccountProfile(request: NextRequest) {
   const router = useRouter();
   const [userId, setUserId] = useState("");
   const { data, setData } = useGlobalContext();
+  const [files, setFiles] = useState<File[]>([]);
   console.log(data);
   if (data.onboarded) {
     router.push("/");
@@ -49,7 +50,7 @@ export default function AccountProfile(request: NextRequest) {
 
     const hasImageChanged = isBase64Image(blob);
     if (hasImageChanged) {
-      const imgRes = await startUpload(imgsrc);
+      const imgRes = await startUpload(files);
 
       if (imgRes && imgRes[0].fileUrl) {
         data.profileImg = imgRes[0].fileUrl;
@@ -61,26 +62,33 @@ export default function AccountProfile(request: NextRequest) {
       username: data.username,
       name: data.name,
       path: pathname,
-      image: blob,
+      image: data.profileImg,
       bio: data.bio,
       userId: userId,
     });
     router.push("/");
   };
   // const handleChange = (e: any) => {
+
   //   setImgsrc(URL.createObjectURL(e.target.files[0]));
   //   console.log(URL.createObjectURL(e.target.files[0]));
   // };
-  const handleChange = (e: any) => {
-    const selectedFile = e.target.files[0];
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
 
-    if (selectedFile) {
-      // Create an object URL for the selected file
-      const newImgsrc = [...imgsrc]; // Create a copy of the array
-      newImgsrc[0] = URL.createObjectURL(selectedFile); // Update the URL for the first element
-      setImgsrc(newImgsrc); // Update the state with the new array
+    const fileReader = new FileReader();
 
-      console.log(newImgsrc[0]); // Log the new URL
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setFiles(Array.from(e.target.files));
+
+      if (!file.type.includes("image")) return;
+
+      fileReader.onload = async (event) => {
+        const imageDataUrl = event.target?.result?.toString() || "";
+      };
+
+      fileReader.readAsDataURL(file);
     }
   };
   return (

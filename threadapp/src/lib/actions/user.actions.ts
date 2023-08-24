@@ -6,28 +6,50 @@ import { connectDB } from "../mongoose"
 interface Params {
     userId: string, username: string, name: string, image: string, bio: string, path: string;
 }
-export async function updateUser({ userId, username, name, image, bio, path }: Params) {
-    connectDB()
+export async function updateUser({
+    userId,
+    bio,
+    name,
+    path,
+    username,
+    image,
+}: Params): Promise<void> {
     try {
-        await User.findByIdAndUpdate({ _id: userId }, {
-            username: username.toLowerCase(),
-            name, bio, onboarded: true, image
-        }, { upsert: true })
+        connectDB();
 
-        if (path === '/profile/edit') {
-            revalidatePath(path)
+        await User.findOneAndUpdate(
+            { id: userId },
+            {
+                username: username.toLowerCase(),
+                name,
+                bio,
+                image,
+                onboarded: true,
+            },
+            { upsert: true }
+        );
+
+        if (path === "/profile/edit") {
+            revalidatePath(path);
         }
     } catch (error: any) {
-        throw new Error(`Failed to create/update user:${error.message}`)
+        throw new Error(`Failed to create/update user: ${error.message}`);
     }
-
 }
 
 export async function fetchUser(userId: string) {
     try {
         connectDB();
-        console.log(userId)
         return await User.findById({ userId })
+        // .populate({path:'communities',model:'Community'})
+    } catch (error: any) {
+        throw new Error(`Failed to fetch the user :${error.message}`)
+    }
+}
+export async function fetchUserByName(username: string) {
+    try {
+        connectDB();
+        return await User.findOne({ username: username }).populate("threads").exec()
         // .populate({path:'communities',model:'Community'})
     } catch (error: any) {
         throw new Error(`Failed to fetch the user :${error.message}`)
