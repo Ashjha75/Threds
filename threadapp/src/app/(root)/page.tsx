@@ -3,6 +3,7 @@ import ThreadCard from "../components/cards/ThreadCard";
 
 export default async function Home() {
   const { posts, isNext } = await fetchPost(1, 30);
+
   return (
     <div>
       <h1 className="head-text text-left">Home</h1>
@@ -18,7 +19,7 @@ export default async function Home() {
                 currentUserId={"64ddb6dfa72514aea656f27c"}
                 parentId={post.parentId}
                 content={post.content}
-                author={post.author}
+                author={post.author.username}
                 community={post.community}
                 createdAt={post.createdAt}
                 contents={post.children}
