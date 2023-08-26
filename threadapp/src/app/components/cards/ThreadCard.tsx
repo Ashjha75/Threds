@@ -27,6 +27,7 @@ interface Props {
   commentCount: string;
   likeCount: string;
   isComment: boolean;
+  type?: "PROFILE" | "COMMENT" | "OTHERS";
 }
 
 export default function ThreadCard({
@@ -41,6 +42,7 @@ export default function ThreadCard({
   commentCount,
   likeCount,
   isComment,
+  type,
 }: Props) {
   return (
     <article
@@ -49,7 +51,17 @@ export default function ThreadCard({
       }`}
     >
       {/* <h2 className="text-small-regular text-light-2">{content}</h2> */}
-      <div className="flex items-start justify-between">
+      <div className="relative flex items-start justify-between">
+        {type == "COMMENT" ? (
+          <div className="absolute -bottom-6 -left-4 text-small-semibold">
+            Replied to{" "}
+            <Link href={`/profile/${contents}`} className="text-blue">
+              @{contents}
+            </Link>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center">
             <Link href={`/profile/${author}`} className="relative h-11 w-11">
@@ -68,12 +80,14 @@ export default function ThreadCard({
             </Link>
             <div className="thread-card_bar"></div>
           </div>
+
           <div className="flex w-full flex-col">
-            <Link href={`/profile/${"s"}`} className="w-fit">
-              <h4 className="cursor-pointer text-base-semibold text-light-1">
+            <Link href={`/profile/${author}`} className="w-fit">
+              <h4 className="cursor-pointer text-base-semibold text-light-1 hover:underline">
                 {author}
               </h4>
             </Link>
+
             <Link href={`/thread/${id}`}>
               {" "}
               <p className="mt-2 text-small-regular text-light-2">{content}</p>

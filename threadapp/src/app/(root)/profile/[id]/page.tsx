@@ -6,11 +6,7 @@ import { SlCalender } from "react-icons/sl";
 import ThreadCard from "@/app/components/cards/ThreadCard";
 const page = async ({ params }: { params: { id: string } }) => {
   const userData = await fetchUsersData(params.id);
-  userData.threads.map((post: any) =>
-    post.children.map((comment: any) => {
-      console.log(comment);
-    })
-  );
+  console.log(userData);
   return (
     <section className="text-light-1">
       <div className="relative ">
@@ -47,46 +43,44 @@ const page = async ({ params }: { params: { id: string } }) => {
       </article>
 
       <ProfileTab userData={userData.username} />
-      {/* {userData.threads
-        .map((post: any) => (
-          <div className="mt-5">
-            <ThreadCard
-              key={post._id}
-              id={post._id}
-              currentUserId={"64ddb6dfa72514aea656f27c"}
-              parentId={post.parentId}
-              content={post.content}
-              author={userData.name}
-              community={post.community}
-              createdAt={post.createdAt}
-              contents={post.children}
-              commentCount={post.childrenCount}
-              likeCount={post.likeCount}
-              isComment={false}
-            />
-          </div>
-        ))
-        .reverse()} */}
-      {userData.threads.map((post: any) =>
-        post.children.map((comment: any) => (
-          <div className="mt-5">
-            <ThreadCard
-              key={comment._id}
-              id={comment._id}
-              currentUserId={"64ddb6dfa72514aea656f27c"}
-              parentId={comment.parentId}
-              content={comment.content}
-              author={userData.name}
-              community={comment.community}
-              createdAt={comment.createdAt}
-              contents={post.children}
-              commentCount={comment.childrenCount}
-              likeCount={comment.likeCount}
-              isComment={true}
-            />
-          </div>
-        ))
-      )}
+      {userData.threads.reverse().map((post: any) => (
+        <div className="mt-5">
+          <ThreadCard
+            key={post._id}
+            id={post._id}
+            currentUserId={"64ddb6dfa72514aea656f27c"}
+            parentId={post.parentId}
+            content={post.content}
+            author={userData.name}
+            community={post.community}
+            createdAt={post.createdAt}
+            contents={post.children}
+            commentCount={post.childrenCount}
+            likeCount={post.likeCount}
+            type={"PROFILE"}
+            isComment={false}
+          />
+        </div>
+      ))}
+      {userData.replies.reverse().map((post: any) => (
+        <div className="mt-5">
+          <ThreadCard
+            key={post._id}
+            id={post._id}
+            currentUserId={"64ddb6dfa72514aea656f27c"}
+            parentId={post.parentId}
+            content={post.content}
+            author={userData.name}
+            community={post.community}
+            createdAt={post.createdAt}
+            contents={post.children}
+            commentCount={post.childrenCount}
+            likeCount={post.likeCount}
+            type={"COMMENT"}
+            isComment={false}
+          />
+        </div>
+      ))}
     </section>
   );
 };

@@ -9,7 +9,6 @@ const page = async (
   request: NextRequest
 ) => {
   const thread = await fetchThreadById(params.id);
-  console.log(thread.Threads);
   return (
     <section>
       <div className="text-white">
@@ -19,13 +18,14 @@ const page = async (
           currentUserId={"64ddb6dfa72514aea656f27c"}
           parentId={thread.parentId}
           content={thread.content}
-          author={thread.author}
+          author={thread.author.name}
           community={thread.community}
           createdAt={thread.createdAt}
           contents={thread.children}
           commentCount={thread.childrenCount}
           likeCount={thread.likeCount}
           isComment={false}
+          type="OTHERS"
         />
         <div className="mt-10 -mb-7 text-gray-400">
           Replying to{" "}
@@ -44,13 +44,14 @@ const page = async (
               currentUserId={"64ddb6dfa72514aea656f27c"}
               parentId={childrenItem.parentId}
               content={childrenItem.content}
-              author={childrenItem.author}
+              author={childrenItem.author.name}
               community={childrenItem.community}
               createdAt={childrenItem.createdAt}
               contents={childrenItem.children}
               commentCount={childrenItem.childrenCount}
               likeCount={childrenItem.likeCount}
               isComment={true}
+              type={"OTHERS"}
             />
           ))}
         </div>
