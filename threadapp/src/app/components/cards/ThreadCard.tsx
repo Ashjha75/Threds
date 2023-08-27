@@ -46,8 +46,8 @@ export default function ThreadCard({
 }: Props) {
   return (
     <article
-      className={`flex w-full flex-col rounded-xl  ${
-        isComment ? "px-0 xs:px-7 mt-5" : "bg-dark-2 p-7"
+      className={`flex w-full flex-col rounded-xl bg-[#122738] ${
+        isComment ? "px-0 xs:px-7 mt-5" : "bg-[#192735] p-7"
       }`}
     >
       {/* <h2 className="text-small-regular text-light-2">{content}</h2> */}
@@ -95,8 +95,7 @@ export default function ThreadCard({
             <div className="mt-5 flex flex-col gap-3">
               <div className="flex gap-3.5">
                 <span className="flex w-fit justify-around">
-                  <LikeButton id={id} />
-                  <span className="text-gray-400 ">{likeCount}</span>
+                  <LikeButton id={id} likeCount={likeCount} />
                 </span>
                 <Link href={`/thread/${id}`}>
                   <span className="flex w-fit justify-around">

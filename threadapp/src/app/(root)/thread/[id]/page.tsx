@@ -18,7 +18,7 @@ const page = async (
           currentUserId={"64ddb6dfa72514aea656f27c"}
           parentId={thread.parentId}
           content={thread.content}
-          author={thread.author.name}
+          author={thread.author.username}
           community={thread.community}
           createdAt={thread.createdAt}
           contents={thread.children}
@@ -44,13 +44,13 @@ const page = async (
               currentUserId={"64ddb6dfa72514aea656f27c"}
               parentId={childrenItem.parentId}
               content={childrenItem.content}
-              author={childrenItem.author.name}
+              author={childrenItem.author.username}
               community={childrenItem.community}
               createdAt={childrenItem.createdAt}
               contents={childrenItem.children}
               commentCount={childrenItem.childrenCount}
               likeCount={childrenItem.likeCount}
-              isComment={true}
+              isComment={false}
               type={"OTHERS"}
             />
           ))}

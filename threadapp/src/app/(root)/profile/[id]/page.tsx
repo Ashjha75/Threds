@@ -4,9 +4,9 @@ import { formatCreatedAtDate } from "@/lib/helpers/commonFunctions";
 import Image from "next/image";
 import { SlCalender } from "react-icons/sl";
 import ThreadCard from "@/app/components/cards/ThreadCard";
+import Posts from "@/app/components/shared/threads";
 const page = async ({ params }: { params: { id: string } }) => {
   const userData = await fetchUsersData(params.id);
-  console.log(userData);
   return (
     <section className="text-light-1">
       <div className="relative ">
@@ -23,11 +23,11 @@ const page = async ({ params }: { params: { id: string } }) => {
             alt={"userData.name"}
             width={120}
             height={120}
-            className="rounded-full shadow-md cursor-pointer absolute top-[15rem]  border-4 border-black"
+            className="rounded-full shadow-md cursor-pointer absolute top-[15rem]  border-4 border-[#193549]"
           />
         </div>
         <div className="">
-          <button className="bg-black rounded-3xl mt-4 text-small-regular  border-2 border-gray-300 py-2 px-6  hover:bg-[#2c3640]">
+          <button className="bg-transparent rounded-3xl mt-4 text-small-regular  border-[1px] border-gray-300 py-2 px-6  hover:bg-[#2c3640]">
             Edit Profile
           </button>
         </div>
@@ -41,45 +41,66 @@ const page = async ({ params }: { params: { id: string } }) => {
           Joined {formatCreatedAtDate(userData.createdAt)}
         </div>
       </article>
+      <div className="text-light-1">Posts</div>
 
-      <ProfileTab userData={userData.username} />
+      <ProfileTab userData={params.id} />
       {userData.threads.reverse().map((post: any) => (
         <div className="mt-5">
-          <ThreadCard
+          <Posts
             key={post._id}
             id={post._id}
             currentUserId={"64ddb6dfa72514aea656f27c"}
             parentId={post.parentId}
             content={post.content}
-            author={userData.name}
+            author={userData.username}
             community={post.community}
             createdAt={post.createdAt}
-            contents={post.children}
-            commentCount={post.childrenCount}
-            likeCount={post.likeCount}
-            type={"PROFILE"}
-            isComment={false}
-          />
-        </div>
-      ))}
-      {userData.replies.reverse().map((post: any) => (
-        <div className="mt-5">
-          <ThreadCard
-            key={post._id}
-            id={post._id}
-            currentUserId={"64ddb6dfa72514aea656f27c"}
-            parentId={post.parentId}
-            content={post.content}
-            author={userData.name}
-            community={post.community}
-            createdAt={post.createdAt}
-            contents={post.children}
+            contents={post.author.username}
             commentCount={post.childrenCount}
             likeCount={post.likeCount}
             type={"COMMENT"}
             isComment={false}
           />
         </div>
+      ))}
+      <div className="text-light-1">replies</div>
+
+      {userData.replies.reverse().map((post: any) => (
+        <div className="mt-5">
+          <Posts
+            key={post._id}
+            id={post._id}
+            currentUserId={"64ddb6dfa72514aea656f27c"}
+            parentId={post.parentId}
+            content={post.content}
+            author={userData.username}
+            community={post.community}
+            createdAt={post.createdAt}
+            contents={post.author.username}
+            commentCount={post.childrenCount}
+            likeCount={post.likeCount}
+            type={"COMMENT"}
+            isComment={false}
+          />
+        </div>
+      ))}
+      <div className="text-light-1">Likes</div>
+      {userData.likes.reverse().map((post: any) => (
+        <Posts
+          key={post._id}
+          id={post._id}
+          currentUserId={"64ddb6dfa72514aea656f27c"}
+          parentId={post.parentId}
+          content={post.content}
+          author={userData.username}
+          community={post.community}
+          createdAt={post.createdAt}
+          contents={post.author.username}
+          commentCount={post.childrenCount}
+          likeCount={post.likeCount}
+          type={"COMMENT"}
+          isComment={false}
+        />
       ))}
     </section>
   );
