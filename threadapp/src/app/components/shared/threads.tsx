@@ -2,41 +2,75 @@
 import { fetchUser, fetchUserByName } from "@/lib/actions/user.actions";
 import { fetchUsersData } from "@/lib/helpers/UserData";
 import { useEffect, useState } from "react";
-
-const Posts = () => {
-  const [userdata, setuserdata] = useState();
-
-  useEffect(() => {
-    async function getData() {
-      const data = await fetchUserByName("Ashish");
-      setuserdata(data);
-    }
-    getData();
-  }, []);
-  console.log(userdata);
-
-  console.log("///////////.............,,,,,,,,,,,,,,,,");
+import ThreadCard from "../cards/ThreadCard";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+interface Props {
+  id: string;
+  currentUserId: string | null;
+  parentId: string;
+  content: string;
+  author: {
+    name: string;
+    image: string;
+    id: string;
+  };
+  community: {
+    name: string;
+    image: string;
+    id: string;
+  } | null;
+  createdAt: string;
+  contents: {
+    author: {
+      image: string;
+    }[];
+  };
+  commentCount: string;
+  likeCount: string;
+  isComment: boolean;
+  type?: "PROFILE" | "COMMENT" | "OTHERS";
+}
+export default function Posts({
+  id,
+  currentUserId,
+  parentId,
+  content,
+  author,
+  community,
+  createdAt,
+  contents,
+  commentCount,
+  likeCount,
+  isComment,
+  type,
+}: Props) {
+  const hostname =
+    typeof window !== "undefined" && window.location.hostname
+      ? window.location.hostname
+      : "";
+  const origin =
+    typeof window !== "undefined" && window.location.origin
+      ? window.location.origin
+      : "";
+  console.log(hostname);
+  console.log(origin);
   return (
-    <div className="bg-blue">h</div>
-    // <div>
-    //   {userDatas.threads.map((post: any) => (
-    //     <ThreadCard
-    //       key={post._id}
-    //       id={post._id}
-    //       currentUserId={"64ddb6dfa72514aea656f27c"}
-    //       parentId={post.parentId}
-    //       content={post.content}
-    //       author={post.author}
-    //       community={post.community}
-    //       createdAt={post.createdAt}
-    //       contents={post.children}
-    //       commentCount={post.childrenCount}
-    //       likeCount={post.likeCount}
-    //       isComment={false}
-    //     />
-    //   ))}
-    // </div>
+    <div>
+      <ThreadCard
+        key={id}
+        id={id}
+        currentUserId={"64ddb6dfa72514aea656f27c"}
+        parentId={parentId}
+        content={content}
+        author={author}
+        community={community}
+        createdAt={createdAt}
+        contents={contents}
+        commentCount={commentCount}
+        likeCount={likeCount}
+        isComment={false}
+      />
+    </div>
   );
-};
-
-export default Posts;
+}
