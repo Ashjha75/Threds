@@ -6,7 +6,7 @@ export default async function Home() {
 
   return (
     <div>
-      <section className="mt-9 flex flex-col gap-10">
+      <section className="mt-9 flex flex-col gap-[2px]">
         {posts.length === 0 ? (
           <p className="head-text text-left">No threads found </p>
         ) : (
