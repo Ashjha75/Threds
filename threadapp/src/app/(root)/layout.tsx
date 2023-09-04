@@ -29,7 +29,7 @@ export default function RootLayout({
             <main className="flex flex-row">
               <LeftSideBar />
               <section className="main-container">
-                <div className="w-full max-w-4xl">{children}</div>
+                <div className="w-full xl">{children}</div>
               </section>
               <RightSideBar />
             </main>
