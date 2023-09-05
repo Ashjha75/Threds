@@ -3,10 +3,11 @@ import ThreadCard from "../components/cards/ThreadCard";
 
 export default async function Home() {
   const { posts, isNext } = await fetchPost(1, 30);
-
+  console.log(posts);
+  console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}}");
   return (
     <div>
-      <section className="mt-9 flex flex-col gap-[2px]">
+      <section className="mt-9 flex flex-col ">
         {posts.length === 0 ? (
           <p className="head-text text-left">No threads found </p>
         ) : (
@@ -18,6 +19,7 @@ export default async function Home() {
                 currentUserId={"64ddb6dfa72514aea656f27c"}
                 parentId={post.parentId}
                 content={post.content}
+                image={post.author.image}
                 author={post.author.username}
                 community={post.community}
                 createdAt={post.createdAt}
