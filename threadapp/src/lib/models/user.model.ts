@@ -32,6 +32,34 @@ const userSchema = new mongoose.Schema({
         default: null,
         ref: "Thread"
     }],
+    replies: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            default: null,
+            ref: "Thread",
+        },
+    ],
+    likes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            default: null,
+            ref: "Thread",
+        },
+    ],
+    follow: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            default: null,
+            ref: "User",
+        },
+    ],
+    followers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            default: null,
+            ref: "User",
+        },
+    ],
     onboarded: {
         type: Boolean,
         default: false
