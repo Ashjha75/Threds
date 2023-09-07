@@ -20,6 +20,7 @@ export default async function Home() {
                 parentId={post.parentId}
                 content={post.content}
                 image={post.author.image}
+                name={post.author.name}
                 author={post.author.username}
                 community={post.community}
                 createdAt={post.createdAt}
