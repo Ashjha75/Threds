@@ -7,17 +7,13 @@ export async function POST(request: NextRequest, response: NextResponse) {
     try {
         await connectDB();
         const reqBody = await request.json();
-        const { params } = reqBody;
-        console.log(params)
-        console.log("---------------------------------")
-        const userData = await fetchUsersData(params);
-        console.log("userData")
-        console.log("------------------0-----------------------")
+        const { username } = reqBody;
+        const userDatas = await fetchUsersData(username);
 
         return NextResponse.json({
             success: true,
             message: "Successfull fetched",
-            data: userData,
+            data: userDatas,
         },
             {
                 status: 200

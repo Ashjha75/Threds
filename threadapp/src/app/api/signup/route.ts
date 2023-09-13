@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
     try {
         const reqBody = await request.json();
         const { username, email, password } = reqBody;
+
         if (!username || !email || !password) {
             return NextResponse.json({ error: 'Please fill all required fields' }, { status: 400 });
         }
@@ -24,6 +25,7 @@ export async function POST(request: NextRequest) {
             username,
             email,
             password: hashedPassword,
+            image: `https://api.dicebear.com/6.x/pixel-art/svg?seed=${username}`,
         });
         const newUserId = newUser._id
 
