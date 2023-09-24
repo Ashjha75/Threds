@@ -3,14 +3,20 @@ import { revalidatePath } from "next/cache";
 import Thread from "../models/thread.model";
 import User from "../models/user.model";
 import { connectDB } from "../mongoose"
+import { decodeToken, fetchData } from "../helpers/tokenData";
+import { NextRequest } from "next/server";
+// import { pushNotification } from "./user.actions";
+import Activity from "../models/activity.model";
 
 interface Params {
     content: string,
     author: string,
     community: string | null,
-    path: string
+    pathname: string
 }
-export async function createThread({ content, author, community, path }: Params) {
+
+
+export async function createThread({ content, author, community, pathname }: Params) {
     connectDB();
     try {
         const createdThread = await Thread.create({
@@ -20,7 +26,8 @@ export async function createThread({ content, author, community, path }: Params)
         await User.findByIdAndUpdate(author, {
             $push: { threads: createdThread._id }
         })
-        revalidatePath(path)
+
+        revalidatePath(pathname)
     } catch (error: any) {
         throw new Error(`Failed to create Thread : ${error.message}`)
     }
@@ -54,7 +61,7 @@ export async function fetchThreadById(id: string) {
         const thread = await Thread.findById(id).populate({
             path: 'author',
             model: User,
-            select: "_id id name image"
+            select: "_id username id name image"
 
         })
             .populate({
@@ -62,7 +69,7 @@ export async function fetchThreadById(id: string) {
                 populate: [{
                     path: 'author',
                     model: User,
-                    select: "_id id name parentId image"
+                    select: "_id id username name parentId image"
                 },
                 {
                     path: 'children',
@@ -70,7 +77,7 @@ export async function fetchThreadById(id: string) {
                     populate: {
                         path: 'author',
                         model: User,
-                        select: "_id id name parentId image"
+                        select: "_id id name username parentId image"
                     }
                 }]
             }).exec();
@@ -80,14 +87,19 @@ export async function fetchThreadById(id: string) {
 
     }
 }
-export async function addCommentToThread(threadId: string, commentText: string, userId: string, path: string) {
+export async function addCommentToThread(threadId: string, commentText: string, userId: string, pathname: string) {
 
     connectDB();
     try {
         // find the original thread by its Id
         const originalThread = await Thread.findById(threadId);
+        //find user for replies push
+        const originalUser = await User.findOne({ _id: userId });
         if (!originalThread) {
             throw new Error("Thread not found")
+        }
+        else if (!originalUser) {
+            throw new Error("User not found")
         }
         // Create a new thread with the comment text
         const commentThread = new Thread({
@@ -95,48 +107,82 @@ export async function addCommentToThread(threadId: string, commentText: string, 
             author: userId,
             parentId: threadId
         })
+        await pushNotification(threadId, originalThread.author, userId, pathname, "comment");
         // Save the new thread
         const savedCommentThread = await commentThread.save();
         // update the original Thread 
         originalThread.children.push(savedCommentThread);
+        // Update the original user 
+        originalUser.replies.push(savedCommentThread);
         originalThread.childrenCount = +(originalThread.children.length)
         // save the original Thread
         await originalThread.save();
-
-        revalidatePath(path)
+        await originalUser.save();
+        revalidatePath(pathname)
     } catch (error: any) {
         throw new Error(`Error fetching thread:${error.message}`)
 
     }
 }
-export async function addLikeUnlike(id: string, action: string, path: any) {
+export async function addsLikesUnlike(id: string, action: string, path: any) {
+    const userData = decodeToken()
     connectDB()
     try {
         const originalThread = await Thread.findById(id);
+        const originalUser = await User.findOne({ _id: userData });
         if (!originalThread) {
             throw new Error("Thread not found")
         }
-        originalThread.likeCount = +(originalThread.likeCount + 1);
         if (action == "LIKE") {
+            await originalUser.updateOne({ $addToSet: { likes: id } }); // Use $addToSet to prevent duplicates
+            await originalUser.save();
+            await originalThread.updateOne({ $addToSet: { likes: id } }); // Use $addToSet to prevent duplicates
+            originalThread.likeCount = (originalThread.likes.length);
+            await originalThread.save();
             return false;
         }
         if (action == "UNLIKE") {
+            await originalUser.updateOne({ $pull: { likes: id } }); // Use $pull to remove the thread ID
+            await originalUser.save();
+            await originalThread.updateOne({ $pull: { likes: id } }); // Use $pull to remove the thread ID
+            originalThread.likeCount = (originalThread.likes.length)
+            await originalThread.save();
             return true;
         }
-        // if (action == "LIKE") {
-        //     originalThread.likeCount += 1
-        // } if (action == "UNLIKE") {
-        //     originalThread.likeCount -= 1
-        // }
-        // else {
-        //     throw new Error("Invalid Actions")
-        // }
         revalidatePath(path)
     } catch (error: any) {
         throw new Error(`Error fetching thread:${error.message}`)
 
     }
 }
+
+export async function addLikeUnlike(userId: string, currentUser: string, type: string, pathname: string) {
+    try {
+        connectDB();
+
+        const originalThread = await Thread.findOne({ _id: userId });
+        const originalUser = await User.findOne({ _id: currentUser });
+        if (type == "LIKE") {
+            await pushNotification(userId, originalThread.author, currentUser, pathname, "likes");
+            await originalThread.updateOne({ $addToSet: { likes: currentUser } })
+            await originalThread.save();
+            await originalUser.updateOne({ $addToSet: { likes: userId } })
+            await originalUser.save();
+
+        }
+        else if (type == "UNLIKE") {
+            await originalThread.updateOne({ $pull: { likes: currentUser } });
+            await originalThread.save();
+            await originalUser.updateOne({ $pull: { likes: userId } });
+            await originalUser.save();
+        }
+        revalidatePath(pathname);
+    } catch (error: any) {
+        throw new Error(`Failed to like the user :${error.message}`)
+    }
+
+}
+
 export async function fetchUserAllPost(id: string) {
     connectDB();
     try {
@@ -145,5 +191,52 @@ export async function fetchUserAllPost(id: string) {
     } catch (error: any) {
         throw new Error(`Error fetching thread:${error.message}`)
 
+    }
+}
+
+export async function pushNotification(id: string, authorId: string, currentUser: string, pathname: string, types: string) {
+    try {
+        connectDB();
+        const type = types;
+        const Threads = await Thread.findOne({ _id: id });
+        const userAccount = await User.findOne({ _id: authorId });
+        if (!Threads) {
+            throw new Error(`User not found with id: ${id}`);
+        }
+        if (types == "likes") {
+
+            const notification = await Activity.create({
+                type, data: {
+                    likes: {
+                        ThreadId: Threads._id,
+                        likerId: currentUser,
+                    },
+
+                }
+            })
+
+            await userAccount.updateOne({ $push: { activities: notification._id } })
+            userAccount.newActivity = +(userAccount.newActivity + 1);
+            await userAccount.save();
+        }
+        else if (types == "comment") {
+            const notification = await Activity.create({
+                type, data: {
+                    comment: {
+                        ThreadId: Threads._id,
+                        likerId: currentUser,
+                    },
+
+                }
+            })
+
+            await userAccount.updateOne({ $push: { activities: notification._id } })
+            userAccount.newActivity = +(userAccount.newActivity + 1);
+            await userAccount.save();
+        }
+
+        revalidatePath(pathname)
+    } catch (error: any) {
+        throw new Error(`Failed to push notification :${error.message}`)
     }
 }
