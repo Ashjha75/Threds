@@ -1,15 +1,12 @@
 "use client";
-import { fetchUser, fetchUserByName } from "@/lib/actions/user.actions";
-import { fetchUsersData } from "@/lib/helpers/UserData";
-import { useEffect, useState } from "react";
 import ThreadCard from "../cards/ThreadCard";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 interface Props {
   id: string;
   currentUserId: string | null;
   parentId: string;
   content: string;
+  image: string;
+  name: string;
   author: {
     name: string;
     image: string;
@@ -37,6 +34,8 @@ export default function Posts({
   parentId,
   content,
   author,
+  name,
+  image,
   community,
   createdAt,
   contents,
@@ -45,16 +44,7 @@ export default function Posts({
   isComment,
   type,
 }: Props) {
-  const hostname =
-    typeof window !== "undefined" && window.location.hostname
-      ? window.location.hostname
-      : "";
-  const origin =
-    typeof window !== "undefined" && window.location.origin
-      ? window.location.origin
-      : "";
-  console.log(hostname);
-  console.log(origin);
+  console.log(image);
   return (
     <div>
       <ThreadCard
@@ -64,6 +54,8 @@ export default function Posts({
         parentId={parentId}
         content={content}
         author={author}
+        image={image}
+        name={name}
         community={community}
         createdAt={createdAt}
         contents={contents}

@@ -1,4 +1,7 @@
 "use client";
+
+import "@uploadthing/react/styles.css";
+
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -11,18 +14,18 @@ import { usePathname, useRouter } from "next/navigation";
 import { NextRequest } from "next/server";
 import { decodeToken } from "@/lib/helpers/tokenData";
 import { useGlobalContext } from "@/Context/store";
+import { UploadButton } from "@/lib/helpers/uploadthing";
 
 export default function AccountProfile(request: NextRequest) {
   const router = useRouter();
   const [userId, setUserId] = useState("");
   const { data, setData } = useGlobalContext();
   const [files, setFiles] = useState<File[]>([]);
-  console.log(data);
   if (data.onboarded) {
     router.push("/");
   }
   useEffect(() => {
-    decodeToken(request)
+    decodeToken()
       .then((decodedUserId) => {
         setUserId(decodedUserId);
       })
@@ -57,40 +60,38 @@ export default function AccountProfile(request: NextRequest) {
       }
     }
 
-    console.log(data.profileImg);
     await updateUser({
       username: data.username,
       name: data.name,
       path: pathname,
-      image: data.profileImg,
+      image: data.profileImg[0].name,
       bio: data.bio,
       userId: userId,
     });
-    router.push("/");
+    // router.push("/");
   };
-  // const handleChange = (e: any) => {
+  const handleChange = (e: any) => {
+    setImgsrc(URL.createObjectURL(e.target.files[0]));
+    console.log(URL.createObjectURL(e.target.files[0]));
+  };
+  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   e.preventDefault();
 
-  //   setImgsrc(URL.createObjectURL(e.target.files[0]));
-  //   console.log(URL.createObjectURL(e.target.files[0]));
+  //   const fileReader = new FileReader();
+
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     const file = e.target.files[0];
+  //     setFiles(Array.from(e.target.files));
+
+  //     if (!file.type.includes("image")) return;
+
+  //     fileReader.onload = async (event) => {
+  //       const imageDataUrl = event.target?.result?.toString() || "";
+  //     };
+
+  //     fileReader.readAsDataURL(file);
+  //   }
   // };
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-
-    const fileReader = new FileReader();
-
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setFiles(Array.from(e.target.files));
-
-      if (!file.type.includes("image")) return;
-
-      fileReader.onload = async (event) => {
-        const imageDataUrl = event.target?.result?.toString() || "";
-      };
-
-      fileReader.readAsDataURL(file);
-    }
-  };
   return (
     <>
       <form className="gap-y-3" onSubmit={handleSubmit(onsubmit)}>
@@ -121,6 +122,18 @@ export default function AccountProfile(request: NextRequest) {
             />
           </label>
         </div>
+        {/* <UploadButton
+          endpoint="imageUploader"
+          onClientUploadComplete={(res: any) => {
+            // Do something with the response
+            console.log("Files: ", res);
+            alert("Upload Completed");
+          }}
+          onUploadError={(error: Error) => {
+            // Do something with the error.
+            alert(`ERROR! ${error.message}`);
+          }}
+        /> */}
         <span className="text-red-500 text-small-regular mt-[2px]">
           {errors.profileImg?.message}
         </span>

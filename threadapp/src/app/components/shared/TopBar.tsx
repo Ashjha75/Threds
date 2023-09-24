@@ -10,7 +10,6 @@ import { fetchUser } from "@/lib/actions/user.actions";
 function Topbar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [userInfo, setUserInfo] = useState();
   const myref = useRef();
   const handleProfile = () => {
     setIsOpen(!isOpen);
@@ -36,13 +35,7 @@ function Topbar() {
       toast.error(error.response.data.message);
     }
   };
-  useEffect(() => {
-    async function getUserData() {
-      const userInfo = await fetchUser(data.id);
-      setUserInfo(userInfo);
-    }
-    getUserData();
-  }, []);
+
   return (
     <nav className="topbar">
       <Link href="/" className="flex items-center gap-4">
@@ -51,14 +44,16 @@ function Topbar() {
       </Link>
 
       <div className="flex-1 bg-white">
-        <Image
-          src="/assets/user-2.png"
-          alt={"userData.name"}
-          width={45}
-          height={45}
-          className="rounded-full  shadow-md cursor-pointer absolute top-2 right-8  border-2 border-[#162634]"
-          onClick={handleProfile}
-        />
+        {data.image && (
+          <img
+            src={data.image}
+            alt={"userData.name"}
+            width={45}
+            height={45}
+            className="rounded-full  shadow-md cursor-pointer absolute top-2 right-8  border-2 border-[#162634]"
+            onClick={handleProfile}
+          />
+        )}
         {isOpen ? (
           <div
             className=" transition-[opacity,margin] duration absolute top-12 right-8   min-w-[15rem] bg-[#122738] shadow-md rounded-lg p-2 mt-2 "

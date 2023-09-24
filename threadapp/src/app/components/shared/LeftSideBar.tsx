@@ -28,11 +28,18 @@ export default function LeftSideBar() {
       return `/${currentTab}`;
     }
   }
+  function dynamicImage(value: string) {
+    if (value == "/assets/heart.svg" && data.ping > 0) {
+      return "/assets/dotedheart.svg";
+    } else {
+      return value;
+    }
+  }
   return (
     <>
-      <section className="custom-scrollbar leftsidebar">
-        <div className="flex w-full flex-1 flex-col gap-6 px-6 ">
-          {sidebarLinks.map((link) => {
+      <section className="custom-scrollbar leftsidebar border border-transparent border-r-primary-500">
+        <div className="flex w-[20vw] flex-1 flex-col gap-6 px-6  ">
+          {sidebarLinks().map((link) => {
             const isActive =
               (pathname.includes(link.route) && link.route.length > 1) ||
               pathname === link.route;
@@ -49,7 +56,7 @@ export default function LeftSideBar() {
                   }`}
                 >
                   <Image
-                    src={link.imgURL}
+                    src={dynamicImage(link.imgURL)}
                     alt={link.label}
                     width={24}
                     height={24}

@@ -4,12 +4,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { usePathname, useRouter } from "next/navigation";
 import { threadSchema } from "@/lib/Validations/Threads";
 import { addCommentToThread } from "@/lib/actions/thread.actions";
-import Image from "next/image";
+// import Image from "next/image";
 import { useGlobalContext } from "@/Context/store";
 
-interface Props {
+type Props = {
   threadsId: string;
-}
+};
 
 const Comment = ({ threadsId }: Props) => {
   const router = useRouter();
@@ -29,8 +29,8 @@ const Comment = ({ threadsId }: Props) => {
       <form className="comment-form" onSubmit={handleSubmit(onsubmit)}>
         <div className=" flex justify-around w-full items-center gap-3">
           <label className="text-blue text-heading4-medium ">
-            <Image
-              src="/assets/user-2.png"
+            <img
+              src={data.image}
               alt="user"
               width={48}
               height={48}

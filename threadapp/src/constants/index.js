@@ -1,36 +1,43 @@
-export const sidebarLinks = [
-  {
-    imgURL: "/assets/home.svg",
-    route: "/",
-    label: "Home",
-  },
-  {
-    imgURL: "/assets/search.svg",
-    route: "/search",
-    label: "Search",
-  },
-  {
-    imgURL: "/assets/heart.svg",
-    route: "/activity",
-    label: "Activity",
-  },
-  {
-    imgURL: "/assets/create.svg",
-    route: "/create-thread",
-    label: "Create Thread",
-  },
-  {
-    imgURL: "/assets/community.svg",
-    route: "/communities",
-    label: "Communities",
-  },
-  {
-    imgURL: "/assets/user.svg",
-    route: "/profile",
-    label: "Profile",
-  },
-];
+"use client ";
 
+import { useGlobalContext } from "@/Context/store";
+
+export const sidebarLinks = () => {
+  const { data, setData } = useGlobalContext();
+
+  return [
+    {
+      imgURL: "/assets/home.svg",
+      route: "/",
+      label: "Home",
+    },
+    {
+      imgURL: "/assets/search.svg",
+      route: "/search",
+      label: "Search",
+    },
+    {
+      imgURL: "/assets/heart.svg",
+      route: "/activity",
+      label: "Activity",
+    },
+    {
+      imgURL: "/assets/create.svg",
+      route: "/create-thread",
+      label: "Create Thread",
+    },
+    {
+      imgURL: "/assets/community.svg",
+      route: "/communities",
+      label: "Communities",
+    },
+    {
+      imgURL: "/assets/user.svg",
+      route: `/profile/${data.username}`,
+      label: "Profile",
+    },
+  ];
+};
 export const profileTabs = [
   {
     value: "threads",

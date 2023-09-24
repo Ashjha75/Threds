@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import Activity from "./activity.model";
 const userSchema = new mongoose.Schema({
     id: {
         type: String, default: null,
@@ -32,6 +32,15 @@ const userSchema = new mongoose.Schema({
         default: null,
         ref: "Thread"
     }],
+    activities: [{
+        type: mongoose.Schema.Types.ObjectId,
+        default: null,
+        ref: "Activity"
+    }],
+    newActivity: {
+        type: Number,
+        default: 0
+    },
     replies: [
         {
             type: mongoose.Schema.Types.ObjectId,

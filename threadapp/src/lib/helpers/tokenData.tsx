@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 import User from "../models/user.model";
 
-export const decodeToken = (request: NextRequest) => {
+export const decodeToken = () => {
   try {
     const cookieStore = cookies();
 
@@ -30,12 +30,14 @@ export const fetchData = async (request: NextRequest) => {
     // Convert payload to formatted JSON string
     const userId = decoded.id;
     const userData = await User.findById({ _id: userId });
-    console.log(userData);
+
     const userDataObject = {
       _id: userData._id.toString(),
       username: userData.username,
       email: userData.email,
       name: userData.name,
+      newActivity: userData.newActivity,
+      image: userData.image.toString(),
       onboarded: userData.onboarded,
     };
     return userDataObject;

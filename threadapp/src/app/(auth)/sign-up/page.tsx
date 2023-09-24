@@ -1,16 +1,26 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { signupSchema } from "@/lib/Validations/Signup";
 
 export default function signup() {
   const router = useRouter();
-  const [user, setUser] = React.useState({
+  const [user, setUser] = useState({
     username: "",
     password: "",
     email: "",
   });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(signupSchema) });
+
   const onSignup = async (e: any) => {
     try {
       e.preventDefault();
@@ -22,6 +32,9 @@ export default function signup() {
     } finally {
     }
   };
+  // const handleChange = (e: any) => {
+  //   setUser({ ...user, [e.target.name]: e.target.value });
+  // };
 
   return (
     <main>
@@ -30,35 +43,42 @@ export default function signup() {
         <h1>Signup</h1>
         <form
           className="p-10 backdrop-blur-sm bg-white/30 rounded-md border-2 border-white flex flex-col m-20 w-[380px] gap-y-5 "
-          onSubmit={onSignup}
+          onSubmit={handleSubmit(onSignup)}
         >
-          <label htmlFor="first">First name:</label>
+          <label htmlFor="first">UserName</label>
           <input
             className="p-3 text-black outline-none rounded-md"
             placeholder="userName"
             type="text"
-            name="userName"
-            value={user.username}
-            onChange={(e) => setUser({ ...user, username: e.target.value })}
+            {...register("username")}
+            // onChange={handleChange}
           />
+          <span className="text-red-500 text-small-regular mt-[2px]">
+            {errors.username?.message}
+          </span>
           <label htmlFor="last">Email</label>
           <input
             className="p-3 text-black outline-none rounded-md"
             type="text"
             placeholder="email"
-            name="email"
-            value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            {...register("email")}
+            // onChange={handleChange}
           />
+          <span className="text-red-500 text-small-regular mt-[2px]">
+            {errors.email?.message}
+          </span>
           <label htmlFor="last">Password</label>
           <input
             className="p-3  text-black outline-none rounded-md"
             type="password"
-            name="password"
-            value={user.password}
             placeholder="password"
-            onChange={(e) => setUser({ ...user, password: e.target.value })}
+            {...register("password")}
+            // onChange={handleChange}
           />
+          <span className="text-red-500 text-small-regular mt-[2px]">
+            {errors.password?.message}
+          </span>
+
           <button
             className="p-2 w-[80px] mx-auto border-2 bg-black border-white rounded-md"
             type="submit"

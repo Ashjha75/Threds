@@ -10,12 +10,14 @@ import {
 import { NextRequest } from "next/server";
 import { fetchData } from "@/lib/helpers/tokenData";
 
-type DataType = {
+export type DataType = {
   _id: string;
   id: string;
   username: string;
+  image: string;
   email: string;
   name: string;
+  ping: number;
   onboarded: boolean;
 };
 
@@ -31,8 +33,10 @@ const GlobalContext = createContext<ContextProps>({
     _id: "",
     id: "",
     username: "",
+    image: "",
     email: "",
     name: "",
+    ping: 0,
     onboarded: false,
   },
   setData: () => {},
@@ -47,8 +51,10 @@ export const GlobalContextProvider = (
     _id: "",
     id: "",
     username: "",
+    image: "",
     email: "",
     name: "",
+    ping: 0,
     onboarded: false,
   });
 
@@ -60,7 +66,9 @@ export const GlobalContextProvider = (
           id: decodedData.id,
           username: decodedData.username,
           email: decodedData.email,
+          image: decodedData.image,
           name: decodedData.name,
+          ping: decodedData.newActivity,
           onboarded: decodedData.onboarded,
         });
       })
@@ -68,7 +76,6 @@ export const GlobalContextProvider = (
         console.error("Error decoding token:", error);
       });
   }, []);
-  console.log(data);
   return (
     <GlobalContext.Provider value={{ data, setData }}>
       {children}
