@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { BiArrowBack } from "react-icons/bi";
 import Users from "../cards/Users";
 import axios from "axios";
 const FollowersList = (props: any) => {
@@ -27,7 +26,13 @@ const FollowersList = (props: any) => {
   return (
     <section className="text-white w-full h-24 -mt-10 border-b-0 border-gray-400">
       <div className="flex">
-        <BiArrowBack
+        {/* <BiArrowBack
+          className=" hover:bg-[#537187] w-9 h-9 rounded-full ml-3 mt-4  items-center cursor-pointer"
+          onClick={(e: any) => props.setIsLoaded(false)}
+        /> */}
+        <img
+          src="/assets/back.svg"
+          alt="backbutton"
           className=" hover:bg-[#537187] w-9 h-9 rounded-full ml-3 mt-4  items-center cursor-pointer"
           onClick={(e: any) => props.setIsLoaded(false)}
         />

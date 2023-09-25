@@ -1,8 +1,7 @@
 "use client";
 import { addLikeUnlike } from "@/lib/actions/thread.actions";
-import { AiOutlineHeart, AiFillHeart } from "react-icons/Ai";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { NextRequest } from "next/server";
 import { useGlobalContext } from "@/Context/store";
 
@@ -19,13 +18,25 @@ const LikeButton = ({ id, likeCount, check }: any, request: NextRequest) => {
     <div className=" flex justify-center items-center  ">
       <div className="w-[30px] h-[30px]  hover:bg-[#19363a]  rounded-full">
         {check ? (
-          <AiFillHeart
+          // <AiFillHeart
+          //   className="cursor-pointer object-contain w-[22px] h-[22px] mt-1 ml-1 text-[#f91880]"
+          //   onClick={handleUnLike}
+          // />
+          <img
+            src="/assets/heart-filled.svg"
+            alt="heart-filled"
             className="cursor-pointer object-contain w-[22px] h-[22px] mt-1 ml-1 text-[#f91880]"
             onClick={handleUnLike}
           />
         ) : (
-          <AiOutlineHeart
-            className="cursor-pointer object-contain w-[22px] h-[22px] mt-1 ml-1 text-[#5c5c7b] "
+          // <AiOutlineHeart
+          //   className="cursor-pointer object-contain w-[22px] h-[22px] mt-1 ml-1 text-[#5c5c7b] "
+          //   onClick={handleLike}
+          // />
+          <img
+            src="/assets/heart-gray.svg"
+            alt="heart"
+            className="cursor-pointer object-contain w-[22px] h-[22px] mt-1 ml-1 text-[#f91880]"
             onClick={handleLike}
           />
         )}

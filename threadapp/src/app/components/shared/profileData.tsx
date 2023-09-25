@@ -1,7 +1,6 @@
 "use client";
 import { followUser } from "@/lib/actions/user.actions";
 import { formatCreatedAtDate } from "@/lib/helpers/commonFunctions";
-import { SlCalender } from "react-icons/sl";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useState } from "react";
@@ -96,7 +95,11 @@ const ProfileData = ({
             <div className="text-primary-500 ">@{userData.username}</div>
             <div className="mt-5">{userData.bio}</div>
             <div className="text-gray-400 flex gap-x-4 items-center text-small-regular">
-              <SlCalender />
+              <img
+                src="/assets/calender.svg"
+                alt="calender"
+                className="w-4 h-4"
+              />
               Joined {formatCreatedAtDate(userData.createdAt, 1)}
             </div>
             <div className="flex gap-10 mt-5 items-center text-small-regular">
