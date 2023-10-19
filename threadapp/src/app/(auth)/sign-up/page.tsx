@@ -32,9 +32,9 @@ export default function signup() {
     } finally {
     }
   };
-  // const handleChange = (e: any) => {
-  //   setUser({ ...user, [e.target.name]: e.target.value });
-  // };
+  const handleChange = (e: any) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
 
   return (
     <main>
@@ -51,7 +51,7 @@ export default function signup() {
             placeholder="userName"
             type="text"
             {...register("username")}
-            // onChange={handleChange}
+            onChange={handleChange}
           />
           <span className="text-red-500 text-small-regular mt-[2px]">
             {errors.username?.message}
@@ -62,7 +62,7 @@ export default function signup() {
             type="text"
             placeholder="email"
             {...register("email")}
-            // onChange={handleChange}
+            onChange={handleChange}
           />
           <span className="text-red-500 text-small-regular mt-[2px]">
             {errors.email?.message}
@@ -73,7 +73,7 @@ export default function signup() {
             type="password"
             placeholder="password"
             {...register("password")}
-            // onChange={handleChange}
+            onChange={handleChange}
           />
           <span className="text-red-500 text-small-regular mt-[2px]">
             {errors.password?.message}
